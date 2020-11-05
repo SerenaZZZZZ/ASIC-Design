@@ -1,0 +1,38 @@
+idle:   if (dr = 0 & lc = 0) goto idle; 
+        else if (lc = 1) goto load1;
+        else if (dr = 1) goto store;
+load1:  reg[9] = F3; 
+load2:  reg[8] = F2;
+load3:  reg[7] = F1;
+load4:  reg[6] = F0; goto idle;
+store:  if (dr = 0) goto eidle;
+        reg[5] = data;
+        modwait = 1;
+        err = 0;
+zero:   reg[0] = 0;         // output register
+sort1:  reg[1] = reg[2];    // sample4
+sort2:  reg[2] = reg[3];    // sample3
+sort3:  reg[3] = reg[4];    // sample2
+sort4:  reg[4] = reg[5];    // sample1
+mul1:   reg[10] = reg[1] * reg[6];// Small pos. coefficient = sample4 * F3
+        if (V) goto eidle;  // On overflow, err condition
+add1:   reg[0] = reg[0] + reg[10];
+        if (V) goto eidle;  // On overflow, err condition
+mul2:   reg[10] = reg[2] * reg[7];// Large neg. coefficient = sample3 * F2
+        if (V) goto eidle;  // On overflow, err condition
+sub2:   reg[0] = reg[0] - reg[10];
+        if (V) goto eidle;  // On overflow, err condition
+        //else goto eidle;
+mul3:   reg[10] = reg[3] * reg[8];// Small neg. coefficient = sample2 * F1
+        if (V) goto eidle;  // On overflow, err condition
+add3:   reg[0] = reg[0] + reg[10];
+        if (V) goto eidle;  // On overflow, err condition
+mul4:   reg[10] = reg[4] * reg[9];// Large pos. coefficient = sample1 * F0
+        if (V) goto eidle;  // On overflow, err condition
+sub4:   reg[0] = reg[0] - reg[10];
+        if (V) goto eidle;  // On overflow, err condition
+        else goto idle;
+eidle:  err = 1;
+        modwait = 0;
+        if (dr = 1) goto store;
+        if (dr = 0) goto eidle;

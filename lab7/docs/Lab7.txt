@@ -1,0 +1,20 @@
+1. Minimum amount of time that data_ready must remain asserted to ensure correct operation
+	2cycle = 2*10ns=20ns
+2. Minimum amount of time in clock cycles that data must remain valid after data_ready is asserted in order to ensure correct operation
+	3 clock cycles
+
+Verilog File IO Demo
+Q1: The filtered images are darker since the filter we designed is a high pass filter.
+	The filtered_1 imgae only filtered horizontal pixels.
+	The filtered_2 imgae only filtered vertical pixels.
+	The filtered_3 imgae filtered all pixels.
+Q2:
+	%d, %c, %s
+Q3:
+	$fopen
+	$fwrite
+	$fseek
+	$fclose
+	$ftell
+ 	$fscanf
+	$fatal
